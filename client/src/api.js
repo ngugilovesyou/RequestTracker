@@ -1,4 +1,4 @@
-const API_BASE_URL = 'https://requesttracker-6x3y.onrender.com';
+const API_BASE_URL = 'http://localhost:5000';
 
 export async function fetchRequests(status = '') {
     try {
