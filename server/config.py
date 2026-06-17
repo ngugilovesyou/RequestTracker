@@ -14,13 +14,11 @@ def init_app(app):
 
     
     if db_url and db_url.startswith("postgresql://"):
-        if "+" not in db_url.split("://")[1]:
-            db_url = db_url.replace("postgresql://", "postgresql+psycopg://", 1)
+        if "+" not in db_url.split("://")[0]:
+            db_url = db_url.replace("postgresql://", "postgresql+psycopg2://", 1)
 
-   
     app.config["SQLALCHEMY_DATABASE_URI"] = db_url or "sqlite:///requests.db"
     app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
-    
     db.init_app(app)
     migrate.init_app(app, db)
