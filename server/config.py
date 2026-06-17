@@ -1,17 +1,18 @@
 import os
-from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
-from flask_cors import CORS
 from flask_migrate import Migrate
 
-app = Flask(__name__)
-SQLALCHEMY_DATABASE_URI = os.getenv(
-        "DATABASE_URL",
-        "sqlite:///requests.db"
-    )
-app.config["SQLALCHEMY_DATABASE_URI"] = SQLALCHEMY_DATABASE_URI
-app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
+db = SQLAlchemy()
+migrate = Migrate()
 
-db = SQLAlchemy(app)
-CORS(app)
-migrate = Migrate(app, db)
+def init_app(app):
+    db.init_app(app)
+    migrate.init_app(app, db)
+
+    db_url = os.getenv("DATABASE_URL")
+
+    if db_url and db_url.startswith("postgres://"):
+        db_url = db_url.replace("postgres://", "postgresql://", 1)
+
+    app.config["SQLALCHEMY_DATABASE_URI"] = db_url or "sqlite:///requests.db"
+    app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
