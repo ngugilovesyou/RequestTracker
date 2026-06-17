@@ -1,3 +1,4 @@
 migrations/
 instance/
 server/Pipfile.lock
+.env

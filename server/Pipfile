@@ -11,6 +11,8 @@ flask-bcrypt = "*"
 flask-migrate = "*"
 flask-jwt-extended = {extras = ["asymmetric_crypto"], version = "*"}
 flask-cors = "*"
+gunicorn = "*"
+psycopg2-binary = "*"
 
 [dev-packages]
 
