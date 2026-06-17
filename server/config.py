@@ -16,3 +16,6 @@ def init_app(app):
 
     app.config["SQLALCHEMY_DATABASE_URI"] = db_url or "sqlite:///requests.db"
     app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
+
+    db.init_app(app)
+    migrate.init_app(app, db)

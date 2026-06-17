@@ -2,9 +2,10 @@ from models import Request as Task
 from flask import Flask,request, jsonify
 from config import init_app, db
 
-app = Flask(__name__)
 
+app = Flask(__name__)
 init_app(app)
+
 
 @app.route('/')
 def index():
