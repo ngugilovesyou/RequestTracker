@@ -1,11 +1,11 @@
 from models import Request as Task
 from flask import Flask,request, jsonify
 from config import init_app, db
-
+from flask_cors import CORS
 
 app = Flask(__name__)
 init_app(app)
-
+CORS(app, resources={r"/*": {"origins": {"*", "https://requesttracker.vercel.app/"}, "methods": ["GET", "POST", "PUT", "DELETE"]}})
 
 @app.route('/')
 def index():
