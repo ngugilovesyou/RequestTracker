@@ -1,122 +1,109 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from './assets/vite.svg'
-import heroImg from './assets/hero.png'
-import './App.css'
+import React, { useState, useEffect } from 'react'
+import RequestForm from './components/RequestForm'
+import RequestList from './components/RequestList'
+import { ToastContainer } from 'react-toastify'
+import { fetchRequests, updateRequestStatus } from './api'
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [activeTab, setActiveTab] = useState('new');
+  const [requests, setRequests] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+const loadRequests = async (status = '') => {
+  setLoading(true);
+  const data = await fetchRequests(status); 
+  setRequests(data);
+  setLoading(false);
+};
+
+
+  useEffect(() => {
+    loadRequests();
+  }, []);
 
   return (
     <>
-      <section id="center">
-        <div className="hero">
-          <img src={heroImg} className="base" width="170" height="179" alt="" />
-          <img src={reactLogo} className="framework" alt="React logo" />
-          <img src={viteLogo} className="vite" alt="Vite logo" />
-        </div>
-        <div>
-          <h1>Get started</h1>
-          <p>
-            Edit <code>src/App.jsx</code> and save to test <code>HMR</code>
-          </p>
-        </div>
-        <button
-          type="button"
-          className="counter"
-          onClick={() => setCount((count) => count + 1)}
-        >
-          Count is {count}
-        </button>
-      </section>
+      <ToastContainer position="top-right" />
 
-      <div className="ticks"></div>
+      <div className="min-h-screen bg-slate-50">
 
-      <section id="next-steps">
-        <div id="docs">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#documentation-icon"></use>
-          </svg>
-          <h2>Documentation</h2>
-          <p>Your questions, answered</p>
-          <ul>
-            <li>
-              <a href="https://vite.dev/" target="_blank">
-                <img className="logo" src={viteLogo} alt="" />
-                Explore Vite
-              </a>
-            </li>
-            <li>
-              <a href="https://react.dev/" target="_blank">
-                <img className="button-icon" src={reactLogo} alt="" />
-                Learn more
-              </a>
-            </li>
-          </ul>
-        </div>
-        <div id="social">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#social-icon"></use>
-          </svg>
-          <h2>Connect with us</h2>
-          <p>Join the Vite community</p>
-          <ul>
-            <li>
-              <a href="https://github.com/vitejs/vite" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#github-icon"></use>
-                </svg>
-                GitHub
-              </a>
-            </li>
-            <li>
-              <a href="https://chat.vite.dev/" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#discord-icon"></use>
-                </svg>
-                Discord
-              </a>
-            </li>
-            <li>
-              <a href="https://x.com/vite_js" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#x-icon"></use>
-                </svg>
-                X.com
-              </a>
-            </li>
-            <li>
-              <a href="https://bsky.app/profile/vite.dev" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#bluesky-icon"></use>
-                </svg>
-                Bluesky
-              </a>
-            </li>
-          </ul>
-        </div>
-      </section>
+      
+        <header className="bg-white border-b border-slate-200 px-6 py-4">
+          <h1 className="text-lg font-semibold text-slate-800">Request Tracker</h1>
+        </header>
 
-      <div className="ticks"></div>
-      <section id="spacer"></section>
+        <main className="max-w-3xl mx-auto px-6 py-8">
+
+          <div className="flex gap-6 border-b border-slate-200 mb-8">
+            <button
+              onClick={() => setActiveTab('new')}
+              className={`pb-3 text-sm font-medium border-b-2 transition-colors ${
+                activeTab === 'new'
+                  ? 'border-indigo-600 text-indigo-600'
+                  : 'border-transparent text-slate-500 hover:text-slate-700'
+              }`}
+            >
+              New Request
+            </button>
+            <button
+              onClick={() => setActiveTab('list')}
+              className={`pb-3 text-sm font-medium border-b-2 transition-colors flex items-center gap-2 ${
+                activeTab === 'list'
+                  ? 'border-indigo-600 text-indigo-600'
+                  : 'border-transparent text-slate-500 hover:text-slate-700'
+              }`}
+            >
+              All Requests
+              {requests.length > 0 && (
+                <span className="bg-slate-100 text-slate-600 text-xs font-semibold rounded-full px-2 py-0.5">
+                  {requests.length}
+                </span>
+              )}
+            </button>
+          </div>
+
+          
+          {activeTab === 'new' && (
+            <div>
+              <div className="mb-6">
+                <h2 className="text-base font-semibold text-slate-800">Submit a request</h2>
+              </div>
+              <RequestForm refreshRequests={loadRequests} />
+            </div>
+          )}
+
+          
+          {activeTab === 'list' && (
+            <div>
+              <div className="flex items-center justify-between mb-6">
+                <div>
+                  <h2 className="text-base font-semibold text-slate-800">All Requests</h2>
+                  <p className="text-sm text-slate-500 mt-1">Review and update submitted requests.</p>
+                </div>
+                <button
+                  onClick={loadRequests}
+                  className="text-sm text-slate-500 hover:text-slate-700 underline underline-offset-2"
+                >
+                  Refresh
+                </button>
+              </div>
+
+              {loading ? (
+                <p className="text-sm text-slate-400 text-center py-12">Loading…</p>
+              ) : (
+                <RequestList
+                  requests={requests}
+                  updateRequestStatus={updateRequestStatus}
+                  refreshRequests={loadRequests}
+                />
+              )}
+            </div>
+          )}
+
+        </main>
+      </div>
     </>
-  )
+  );
 }
 
-export default App
+export default App;
