@@ -123,10 +123,10 @@ The server will run at http://localhost:5000
 ### 5. Frontend Setup (React + Vite)
 Open a new terminal window:
 
-bash
+``` bash
 cd client
-
-# Install dependencies
+```
+### Install dependencies
 ``` bash
 npm install
 ```
