@@ -98,7 +98,6 @@ function RequestList({
 
   return (
   <div className="space-y-5">
-    {/* Filter */}
     <div className="bg-white border border-slate-200 rounded-xl shadow-sm p-4 flex flex-col sm:flex-row sm:items-center gap-3">
       <label className="text-sm font-medium text-slate-700">
         Filter by Status
